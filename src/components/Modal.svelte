@@ -1,0 +1,2 @@
+<script>let {title='Dialog',onClose,children}= $props();</script>
+<div class="modal-backdrop" role="presentation" onclick={(e)=>{if(e.target===e.currentTarget)onClose?.()}} onkeydown={(e)=>{if(e.key==='Escape')onClose?.()}}><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-heading"><h2 id="modal-title">{title}</h2><button class="icon-button" aria-label="Tutup dialog" onclick={()=>onClose?.()}>×</button></div>{@render children?.()}</section></div>

@@ -1,0 +1,12 @@
+import { apiGet, apiPost, apiPut, apiDelete } from '../../../helpers/apiHelper.js';
+const base='/link-trees';
+export const getLinkTrees=()=>apiGet(base);
+export const getLinkTree=(id)=>apiGet(`${base}/${encodeURIComponent(id)}`);
+export const createLinkTree=(data)=>apiPost(base,{title:data.title,type:data.type||'public',description:data.description||''});
+export const updateLinkTree=(id,data)=>apiPut(`${base}/${encodeURIComponent(id)}`,data);
+export const uploadCover=(id,file)=>{const body=new FormData();body.append('cover',file);return apiPost(`${base}/${encodeURIComponent(id)}/cover`,body);};
+export const deleteLinkTree=(id)=>apiDelete(`${base}/${encodeURIComponent(id)}`);
+export const deleteAllLinkTrees=()=>apiDelete(base);
+export const createItem=(id,data)=>apiPost(`${base}/${encodeURIComponent(id)}/items`,data);
+export const updateItem=(id,itemId,data)=>apiPut(`${base}/${encodeURIComponent(id)}/items/${encodeURIComponent(itemId)}`,data);
+export const deleteItem=(id,itemId)=>apiDelete(`${base}/${encodeURIComponent(id)}/items/${encodeURIComponent(itemId)}`);

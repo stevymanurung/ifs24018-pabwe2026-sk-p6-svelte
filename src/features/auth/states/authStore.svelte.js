@@ -1,0 +1,3 @@
+import { getToken, setToken, apiGet } from '../../../helpers/apiHelper.js';
+let user = $state(null); let token = $state(getToken());
+export const authStore = { get user(){return user}, get token(){return token}, get isAuthenticated(){return Boolean(token)}, setSession(nextToken, nextUser=null){token=nextToken||'';user=nextUser;setToken(token);}, setUser(nextUser){user=nextUser;}, clear(){token='';user=null;setToken('');}, async refresh(){if(!token)return null;try{const result=await apiGet('/users/me');user=result?.data?.user||result?.data||null;return user;}catch(error){if(/401|unauthor/i.test(error.message)){this.clear();}throw error;}} };

@@ -1,0 +1,1 @@
+export function useInput(initialValue = '') { let value = $state(initialValue); let error = $state(''); return { get value(){return value}, set value(v){value=v}, get error(){return error}, set error(v){error=v}, bind(){return { value, oninput: (event) => { value = event.currentTarget.value; error = ''; } }}, reset(){value=initialValue;error='';} }; }

@@ -1,0 +1,1 @@
+<script>let {children}= $props();</script><main class="auth-shell"><a href="/" class="brand auth-brand"><img src="/logo.svg" alt="" width="42" height="42"/><span>Delcom <b>Link Tree</b></span></a><section class="auth-card">{@render children?.()}</section><p class="auth-foot">Satu tempat untuk mengumpulkan, mengatur, dan membagikan tautan.</p></main>
