@@ -26,3 +26,13 @@ Semua operasi API berada di `src/features/*/api/`. Format respons diasumsikan me
 ## Pengujian
 
 `bun run test` menjalankan Vitest. `bun run test:coverage` menjalankan coverage dengan ambang 100% yang dikonfigurasi pada helper, API, store, dan router. Jalankan dan verifikasi pengujian pada lingkungan lokal setelah dependensi terpasang.
+
+
+## Deployment dan aksesibilitas
+
+- `vercel.json` mengarahkan path aplikasi SPA ke `index.html`, agar URL seperti `/auth/login` dapat dimuat langsung di Vercel.
+- `public/robots.txt` berisi aturan crawler yang valid dan tidak mengindeks halaman profil/pengguna.
+- Font menggunakan system stack untuk menghindari request Google Fonts yang menghambat render awal.
+- Warna teks sekunder dan ukuran teks kecil diperkuat untuk membantu memenuhi pemeriksaan kontras dan keterbacaan.
+
+Setelah perubahan, deploy ulang ke Vercel dan jalankan kembali Lighthouse/Axe. Hasil skor aktual bergantung pada lingkungan audit dan perlu diverifikasi setelah deployment.
