@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
+/** Inline emitted CSS into index.html to remove the stylesheet network request
+ * from the initial critical request chain. */
 function inlineCriticalStylesheet() {
   return {
     name: 'inline-critical-stylesheet',
@@ -13,23 +15,28 @@ function inlineCriticalStylesheet() {
       let html = typeof htmlAsset.source === 'string'
         ? htmlAsset.source
         : Buffer.from(htmlAsset.source).toString('utf8');
+
       const cssAssets = Object.values(bundle).filter(
         (asset) => asset.type === 'asset' && asset.fileName.endsWith('.css'),
       );
 
-      // Inline generated CSS into HTML so the browser does not need a separate,
-      // render-blocking stylesheet request on the critical loading path.
       for (const cssAsset of cssAssets) {
-        const cssPath = `/${cssAsset.fileName}`;
-        const escapedPath = cssPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const linkPattern = new RegExp(`<link\\b(?=[^>]*\\brel=[\"']stylesheet[\"'])(?=[^>]*\\bhref=[\"'](?:[^\"']*/)?${escapedPath.split('/').pop()}(?:\\?[^\"']*)?[\"'])[^>]*\\/?\\s*>`, 'i');
+        const fileName = cssAsset.fileName.split('/').pop();
+        // Escape the filename before using it in a regular expression.
+        const escapedName = fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const linkPattern = new RegExp(
+          `<link\\b(?=[^>]*\\brel=["']stylesheet["'])(?=[^>]*\\bhref=["'][^"']*${escapedName}(?:\\?[^"']*)?["'])[^>]*\\/?\\s*>`,
+          'gi',
+        );
         const css = String(cssAsset.source).replace(/<\/style/gi, '<\\/style');
         const styleTag = `<style>${css}</style>`;
 
         if (linkPattern.test(html)) {
+          // Replace every matching stylesheet link, not just the first one.
           html = html.replace(linkPattern, styleTag);
         } else if (!html.includes(styleTag)) {
-          // Fallback for Vite output format changes: still inline the CSS.
+          // Vite output can change formatting between versions. If a matching
+          // link was not found, add the CSS to the document head as a fallback.
           html = html.replace('</head>', `${styleTag}</head>`);
         }
         delete bundle[cssAsset.fileName];
@@ -42,6 +49,9 @@ function inlineCriticalStylesheet() {
 
 export default defineConfig({
   plugins: [svelte(), inlineCriticalStylesheet()],
+  build: {
+    cssCodeSplit: false,
+  },
   test: {
     environment: 'jsdom',
     setupFiles: './src/test-setup.js',
