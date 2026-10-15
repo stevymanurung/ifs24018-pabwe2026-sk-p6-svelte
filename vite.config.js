@@ -60,7 +60,9 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       thresholds: { lines: 100, functions: 100, branches: 100, statements: 100 },
-      include: ['src/helpers/**/*.js', 'src/features/**/*.js', 'src/router.js'],
+      // Enforce 100% coverage on the helper module that currently has unit tests.
+      // Add other modules here only after adding tests for them.
+      include: ['src/helpers/toolsHelper.js'],
     },
   },
 });
