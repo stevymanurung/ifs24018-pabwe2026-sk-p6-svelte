@@ -10,3 +10,8 @@
 .muted{color:#536358;}
 .auth-switch,.auth-foot{color:#536358;}
 input::placeholder,textarea::placeholder{color:#5c6b60;opacity:1;}
+
+/* Final contrast fixes for decorative labels and cover placeholders. */
+.cover-placeholder{color:#245e38;}
+.stat-icon.yellow{color:#805700;}
+.cover-symbol{opacity:1;color:#245e38;}
